@@ -29,16 +29,16 @@ func main() {
 
 		fmt.Println(strings.Repeat("*", 10))
 
-		booksErr := printCSV(booksPath)
-		if booksErr != nil {
-			log.Println(booksErr)
+		magazinesErr := printCSV(magazinesPath)
+		if magazinesErr != nil {
+			log.Println(magazinesErr)
 		}
 
 		fmt.Println(strings.Repeat("*", 10))
 
-		magazinesErr := printCSV(magazinesPath)
-		if magazinesErr != nil {
-			log.Println(magazinesErr)
+		booksErr := printCSV(booksPath)
+		if booksErr != nil {
+			log.Println(booksErr)
 		}
 
 		fmt.Println(strings.Repeat("*", 10))
