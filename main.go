@@ -18,10 +18,10 @@ const (
 
 func main() {
 	var printflag bool
-	var searchFlag string
+	var isbnFlag string
 
 	flag.BoolVar(&printflag, "print", false, "print all csv files")
-	flag.StringVar(&searchFlag, "search", "", "search by isbn")
+	flag.StringVar(&isbnFlag, "isbn", "", "search by isbn")
 
 	flag.Parse()
 
@@ -48,15 +48,15 @@ func main() {
 		fmt.Println(strings.Repeat("*", 10))
 	}
 
-	if searchFlag != "" {
+	if isbnFlag != "" {
 		var result []string
 
-		result, booksErr := searchByISBN(booksPath, searchFlag)
+		result, booksErr := searchByISBN(booksPath, isbnFlag)
 		if booksErr != nil {
 			log.Println(booksErr)
 		}
 
-		result, magazinesErr := searchByISBN(magazinesPath, searchFlag)
+		result, magazinesErr := searchByISBN(magazinesPath, isbnFlag)
 		if magazinesErr != nil {
 			log.Println(magazinesErr)
 		}
