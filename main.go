@@ -18,7 +18,11 @@ const (
 
 func main() {
 	var printflag bool
+	var searchFlag string
+
 	flag.BoolVar(&printflag, "print", false, "print all csv files")
+	flag.StringVar(&searchFlag, "search", "", "search by isbn")
+
 	flag.Parse()
 
 	if printflag {
@@ -43,6 +47,23 @@ func main() {
 
 		fmt.Println(strings.Repeat("*", 10))
 	}
+
+	if searchFlag != "" {
+		var result []string
+
+		result, booksErr := searchByISBN(booksPath, searchFlag)
+		if booksErr != nil {
+			log.Println(booksErr)
+		}
+
+		result, magazinesErr := searchByISBN(magazinesPath, searchFlag)
+		if magazinesErr != nil {
+			log.Println(magazinesErr)
+		}
+
+		fmt.Println(result)
+	}
+
 }
 
 func readCSV(path string) ([][]string, error) {
@@ -73,4 +94,25 @@ func printCSV(path string) error {
 	}
 
 	return nil
+}
+
+func searchByISBN(path, isbn string) ([]string, error) {
+	var result []string
+
+	records, readErr := readCSV(path)
+	if readErr != nil {
+		return nil, readErr
+	}
+
+	for _, record := range records {
+		for index, value := range record {
+			if index == 1 {
+				if strings.Compare(isbn, value) == 0 {
+					result = append(result, record...)
+				}
+			}
+		}
+	}
+
+	return result, nil
 }
