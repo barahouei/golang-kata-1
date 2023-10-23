@@ -19,9 +19,11 @@ const (
 func main() {
 	var printflag bool
 	var isbnFlag string
+	var emailFlag string
 
 	flag.BoolVar(&printflag, "print", false, "print all csv files")
 	flag.StringVar(&isbnFlag, "isbn", "", "search by isbn")
+	flag.StringVar(&emailFlag, "email", "", "search by email")
 
 	flag.Parse()
 
@@ -62,6 +64,26 @@ func main() {
 		}
 
 		fmt.Println(result)
+	}
+
+	if emailFlag != "" {
+		var all []string
+
+		bookResult, booksErr := searchByEmail(booksPath, emailFlag)
+		if booksErr != nil {
+			log.Println(booksErr)
+		}
+
+		all = append(all, bookResult...)
+
+		magazinesResult, magazinesErr := searchByEmail(magazinesPath, emailFlag)
+		if magazinesErr != nil {
+			log.Println(magazinesErr)
+		}
+
+		all = append(all, magazinesResult...)
+
+		fmt.Println(all)
 	}
 
 }
@@ -114,5 +136,26 @@ func searchByISBN(path, isbn string) ([]string, error) {
 		}
 	}
 
+	return result, nil
+}
+
+func searchByEmail(path, email string) ([]string, error) {
+	var result []string
+
+	records, readErr := readCSV(path)
+	if readErr != nil {
+		return nil, readErr
+	}
+
+	for _, record := range records {
+		for index, value := range record {
+			if index == 2 {
+				if strings.Contains(email, value) {
+					result = append(result, record...)
+				}
+			}
+		}
+	}
+	// fmt.Println(result)
 	return result, nil
 }
