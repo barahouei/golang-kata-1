@@ -45,16 +45,25 @@ func main() {
 	}
 }
 
-func printCSV(path string) error {
+func readCSV(path string) ([][]string, error) {
 	file, fileErr := os.Open(path)
 	if fileErr != nil {
-		return fileErr
+		return nil, fileErr
 	}
 
 	reader := csv.NewReader(file)
 	reader.Comma = comma
 
 	records, readErr := reader.ReadAll()
+	if readErr != nil {
+		return nil, readErr
+	}
+
+	return records, nil
+}
+
+func printCSV(path string) error {
+	records, readErr := readCSV(path)
 	if readErr != nil {
 		return readErr
 	}
